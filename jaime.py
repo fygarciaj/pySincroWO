@@ -8,7 +8,7 @@ listener = sr.Recognizer()
 engine = pyttsx3.init()
 
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
+engine.setProperty('voice', voices[2].id)
 
 def talk(text):
     engine.say(text)
@@ -21,16 +21,25 @@ def listen():
             voice = listener.listen(source)
             rec = listener.recognize_google(voice)
             rec = rec.lower()
+            print(rec)
             if name in rec:
+                rec.replace(name, '')
                 print(rec)
-    except: 
-        pass
-    return rec
+            return rec
+    except sr.RequestError: 
+        print(sr.RequestError)
+    
 
 def run():
     rec = listen()
-    if 'reproduce' in rec:
-        talk(rec)
-        print('Reproducciendo')
+    match rec:
+        case 'reproduce':
+            talk(rec)
+            print('Reproducciendo')
+        case 'llama':
+            print('Llamando a...')
+        case _:
+            print('No entiendo...')
+
 
 run()
