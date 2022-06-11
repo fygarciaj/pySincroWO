@@ -1,7 +1,5 @@
 from contextlib import nullcontext
 from importlib.metadata import files
-from math import isnan
-from operator import length_hint
 import zipfile
 import os
 from os.path import join
@@ -10,26 +8,42 @@ import json
 
 path = r'C:'
 # read config.json
-data = {}
+dataConfig = {
+   "sourcePath": path,
+   "destinyPath" : path
+}
 
 
 def readJson():
-    with open('config.json') as f:
-        data = json.load(f)
-    return data
+    try:
+        with open('config.json') as f:
+            dataConfig = json.load(f)
+            return dataConfig
+    except:
+        saveJson(dataConfig)
+        pass
 
 
-def saveJson(data):
-    with open('config.json', 'w') as f:
-        json.dump(data, f)
+def saveJson(dataConfig):
+    try:
+        with open('config.json', 'w') as f:
+            json.dump(dataConfig, f)
+    except:
+        pass
 
 
 if __name__ == '__main__':
+    
+    dataConfig = readJson()
+    sourcePath = dataConfig['sourcePath']
+    destinyPath = dataConfig['destinyPath']
 
-    if len(data) == 0:
-        print('data is null')
-        data = readJson()
-        path = data['path']
+    if os.path.exists(sourcePath):
+        print("La carpeta origen donde se encuentras las copias de seguridad es: " + sourcePath)
+    if os.path.exists(destinyPath):
+        print("La carpeta destino donde se pasaran las copias de seguridad es: " + sourcePath)
+
+
 
     try:
 
@@ -47,4 +61,4 @@ if __name__ == '__main__':
     except Exception as e:
         print(e)
 
-    saveJson(data)
+    # saveJson(dataConfig)
